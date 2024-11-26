@@ -16,12 +16,14 @@
 
 package com.alibaba.nacos;
 
+import com.alibaba.nacos.sys.env.Constants;
 import com.alibaba.nacos.sys.filter.NacosTypeExcludeFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.TypeExcludeFilter;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
@@ -43,7 +45,14 @@ import org.springframework.context.annotation.FilterType;
 public class Nacos {
     
     public static void main(String[] args) {
-        SpringApplication.run(Nacos.class, args);
+        System.setProperty(Constants.STANDALONE_MODE_PROPERTY_NAME, "true");
+        
+        Runtime.getRuntime().addShutdownHook(new Thread(()->{
+            System.out.println("被kill");
+        }));
+        
+        ConfigurableApplicationContext run = SpringApplication.run(Nacos.class, args);
+        
     }
 }
 
